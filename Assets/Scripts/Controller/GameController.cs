@@ -6,12 +6,13 @@ namespace Controller
     public class GameController : MonoBehaviour
     {
         [SerializeField] private Data.Data data;
+        [SerializeField] private MapView mapView;
         private Controllers _controllers;
 
         private void Awake()
         {
             _controllers = new Controllers();
-            new GameInit(_controllers, data);
+            new GameInit(_controllers, data, mapView);
            
             _controllers.Awake();
             
