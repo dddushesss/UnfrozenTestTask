@@ -9,13 +9,30 @@ namespace Data
     {
         
 
-        [SerializeField] private bool isUsingNonDefaultFlowfieldPathfindingData;
+        [SerializeField] private bool isUsingNonDefaultCharacterListData;
         [SerializeField] private string _charactersDataPath = "CharactersList";
         private CharactersListData _charactersData;
+        
+        [SerializeField] private bool isUsingNonDefaultBattleInterfaceData;
+        [SerializeField] private string battleInterfaceDataPath = "BattleInterfaceData";
+        private BattleInterfaceData _battleInterfaceData;
 
         [Space, SerializeField] private string pathToLevel = "Data/";
         [SerializeField] private string pathToData = "Data/";
 
+        
+        public BattleInterfaceData BattleInterfaceData
+        {
+            get
+            {
+                if (_charactersData == null)
+                {
+                    _battleInterfaceData = Load<BattleInterfaceData>(battleInterfaceDataPath, isUsingNonDefaultBattleInterfaceData);
+                }
+        
+                return _battleInterfaceData;
+            }
+        }
 
         public CharactersListData CharactersData
         {
@@ -23,7 +40,7 @@ namespace Data
             {
                 if (_charactersData == null)
                 {
-                    _charactersData = Load<CharactersListData>(_charactersDataPath, isUsingNonDefaultFlowfieldPathfindingData);
+                    _charactersData = Load<CharactersListData>(_charactersDataPath, isUsingNonDefaultBattleInterfaceData);
                 }
         
                 return _charactersData;

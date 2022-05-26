@@ -1,8 +1,9 @@
-﻿
-
-using Characters;
+﻿using Characters;
 using Map;
 using Singleton;
+using StateMachine;
+using StateMachine.States;
+using UnityEngine;
 
 namespace Controller
 {
@@ -13,7 +14,14 @@ namespace Controller
             Singleton<TimerHelper>.Init("TimerHelper");
             CharacterFactory characterFactory = new CharacterFactory(mapView, data.CharactersData);
             characterFactory.Spawn();
-        }
 
+            BattleController battleController = new BattleController();
+            var battleInterface = new BattleInterfaceController(data.BattleInterfaceData);
+
+            battleController.SetInterface(battleInterface.Spawn());
+            battleController.Initialize(new PlayerTurnState(
+                characterFactory.PlayerCharacters[Random.Range(0, characterFactory.PlayerCharacters.Count)],
+                battleController));
+        }
     }
 }

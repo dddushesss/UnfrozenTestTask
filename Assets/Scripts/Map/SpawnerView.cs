@@ -6,9 +6,11 @@ namespace Map
     {
         [SerializeField] private RectTransform rectTransform;
         [SerializeField] private Team teamName;
+        [SerializeField] private bool isInFront;
         
         public Team Team => teamName;
         public Vector3 SpawnPos => rectTransform.position - new Vector3(0, rectTransform.rect.height/2, 0);
+        
 
         public void SetUp(Team teamName)
         {

@@ -12,6 +12,8 @@ namespace Characters
         private int _hp;
         private Team _team;
 
+        public bool IsPlayer => _team is Team.Player;
+
         public Character(CharacterData data)
         {
             _data = data;
@@ -27,7 +29,7 @@ namespace Characters
             _view.name = _data.InitSkin;
             _view.transform.SetPositionAndRotation(pos, Quaternion.identity);
             _team = team;
-            _view.SetUp(_data, _team is Team.Enemy);
+            _view.SetUp(_data, !IsPlayer);
             _hp = _data.Hp;
             go.Initialize(false);
         }

@@ -10,6 +10,7 @@ namespace Map
         [SerializeField] private Transform parrant;
 
         public List<SpawnerView> Spawners => spawners;
+        
 
 #if UNITY_EDITOR
 
