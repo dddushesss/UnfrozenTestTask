@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Data
   m_EditorClassIdentifier: 
   isUsingNonDefaultFlowfieldPathfindingData: 0
-  _charactersDataPath: CharactersData
+  _charactersDataPath: CharactersList
   pathToLevel: Data/
   pathToData: Data/

@@ -10,7 +10,7 @@ namespace Data
         
 
         [SerializeField] private bool isUsingNonDefaultFlowfieldPathfindingData;
-        [SerializeField] private string _charactersDataPath = "CharactersData";
+        [SerializeField] private string _charactersDataPath = "CharactersList";
         private CharactersListData _charactersData;
 
         [Space, SerializeField] private string pathToLevel = "Data/";
@@ -23,7 +23,7 @@ namespace Data
             {
                 if (_charactersData == null)
                 {
-                    _charactersData = Load<CharactersListData>(_charactersDataPath, CharactersData);
+                    _charactersData = Load<CharactersListData>(_charactersDataPath, isUsingNonDefaultFlowfieldPathfindingData);
                 }
         
                 return _charactersData;

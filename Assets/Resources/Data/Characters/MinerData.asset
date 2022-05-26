@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e6a8ce4d1704f0795f93db76299a5bb, type: 3}
   m_Name: MinerData
   m_EditorClassIdentifier: 
-  dmg: 0
-  prefab: {fileID: 0}
+  dmg: 5
+  skeletonData: {fileID: 11400000, guid: 294e9dbcde1e2f8cd916ef74ee5d935f, type: 2}
+  initSkin: base
+  initAnimation: Idle

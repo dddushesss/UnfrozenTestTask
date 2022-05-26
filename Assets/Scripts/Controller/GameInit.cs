@@ -1,6 +1,7 @@
 ﻿
 
 using Characters;
+using Map;
 using Singleton;
 
 namespace Controller
@@ -11,6 +12,7 @@ namespace Controller
         {
             Singleton<TimerHelper>.Init("TimerHelper");
             CharacterFactory characterFactory = new CharacterFactory(mapView, data.CharactersData);
+            characterFactory.Spawn();
         }
 
     }

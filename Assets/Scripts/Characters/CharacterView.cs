@@ -13,22 +13,42 @@ namespace Characters
     [RequireComponent(typeof(SkeletonAnimation))]
     public class CharacterView : MonoBehaviour
     {
-        private SkeletonAnimation animation;
+        private SkeletonAnimation _skeleton;
         private CharacterData _data;
+        private MeshRenderer _renderer;
         public Action<int> OnHit;
-
-        public void SetUp(CharacterData data)
+        
+        public void SetUp(CharacterData data, bool isToFlip)
         {
-            animation = gameObject.GetOrAddComponent<SkeletonAnimation>();
-            if (animation.state is null) return;
-            animation.state.Event += Handle;
+            _skeleton = gameObject.GetOrAddComponent<SkeletonAnimation>();
+            _renderer = gameObject.GetComponent<MeshRenderer>();
+            if (_skeleton.state is null) return;
+            if (isToFlip)
+                FlipX();
+            _data = data; 
+            _skeleton.Initialize(true);
+            _skeleton.Skeleton.SetSkin(_data.InitSkin);
+            _renderer.sortingOrder = 3;
+            _skeleton.AnimationState.SetAnimation(0, _data.InitAnimation, true);
+            _skeleton.state.Event += Handle;
+            
+        }
+
+        public void PlayAnimation(string animation)
+        {
+            _skeleton.AnimationState.SetAnimation(0, animation, false);
+            _skeleton.state.AddAnimation(0, _data.InitAnimation, true, 0f);
+        }
+        private void FlipX()
+        {
+            _skeleton.initialFlipX = true;
         }
 
         [EditorButton]
         private void SetAnimation(string name, bool loop)
         {
-            animation.state.SetAnimation(0, name, loop);
-            animation.state.AddAnimation(0, "Idle", true, 0f);
+            _skeleton.state.SetAnimation(0, name, loop);
+            _skeleton.state.AddAnimation(0, "Idle", true, 0f);
         }
 
         [EditorButton]
@@ -38,7 +58,7 @@ namespace Characters
 
             transform.DOScale(transform.localScale * multyplier, 0.3f).SetEase(Ease.OutQuart);
             Singleton<TimerHelper>.Instance.StartTimer(() => transform.DOScale(defultScale, 0.3f),
-                animation.state.GetCurrent(0).AnimationTime + 0.5f);
+                _skeleton.state.GetCurrent(0).AnimationTime + 0.5f);
         }
 
         [EditorButton]
@@ -52,7 +72,7 @@ namespace Characters
         {
             if (action.Data.Name == "Hit")
             {
-                OnHit.Invoke(_data.Dmg);
+                OnHit?.Invoke(_data.Dmg);
             }
         }
     }
