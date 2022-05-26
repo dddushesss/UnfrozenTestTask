@@ -76,6 +76,7 @@ namespace Characters
             if (action.Data.Name == "Hit")
             {
                 OnHit?.Invoke(_data.Dmg);
+                OnHit = null;
             }
         }
         

@@ -57,7 +57,9 @@ namespace Characters
 
         public void Attack(Character target)
         {
-            target.GetDamage(_data.Dmg);
+            _view.PlayAnimation(_data.AttackAnimation);
+            _view.OnHit += target.GetDamage;
+           
         }
 
         public void SwitchPlaces(Character target, Action onComplete)

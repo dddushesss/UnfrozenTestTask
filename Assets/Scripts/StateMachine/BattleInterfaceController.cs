@@ -25,7 +25,11 @@ namespace StateMachine
             _view.SkipButton.onClick.AddListener(() => OnSkipButtonPressed?.Invoke());
             return this;
         }
-        
-        
+
+        public void SetButtonsEnabled(bool isEnabled)
+        {
+            _view.AttackButton.interactable = isEnabled;
+            _view.SkipButton.interactable = isEnabled;
+        }
     }
 }
