@@ -1,7 +1,6 @@
 ﻿using System;
 using Data;
 using DG.Tweening;
-using Singleton;
 using Spine;
 using Spine.Unity;
 using UnityEngine;
@@ -15,10 +14,13 @@ namespace Characters
     {
         private SkeletonAnimation _skeleton;
         private CharacterData _data;
+        private Character _character;
         private MeshRenderer _renderer;
-        public Action<int> OnHit;
+        private bool _canChoose = false;
+        public event Action<int> OnHit;
+        public event Action<Character> OnCharacterChosen;
         
-        public void SetUp(CharacterData data, bool isToFlip)
+        public void SetUp(CharacterData data, bool isToFlip, Character character)
         {
             _skeleton = gameObject.GetOrAddComponent<SkeletonAnimation>();
             _renderer = gameObject.GetComponent<MeshRenderer>();
@@ -31,9 +33,14 @@ namespace Characters
             _renderer.sortingOrder = 3;
             _skeleton.AnimationState.SetAnimation(0, _data.InitAnimation, true);
             _skeleton.state.Event += Handle;
-            
+            _character = character;
         }
 
+        public void CanChoose(bool canChoose)
+        {
+            _canChoose = canChoose;
+        }
+        
         public void PlayAnimation(string animation)
         {
             _skeleton.AnimationState.SetAnimation(0, animation, false);
@@ -52,13 +59,9 @@ namespace Characters
         }
 
         [EditorButton]
-        private void PopUp(float multyplier)
+        private void PopUp(float scale)
         {
-            var defultScale = transform.localScale;
-
-            transform.DOScale(transform.localScale * multyplier, 0.3f).SetEase(Ease.OutQuart);
-            Singleton<TimerHelper>.Instance.StartTimer(() => transform.DOScale(defultScale, 0.3f),
-                _skeleton.state.GetCurrent(0).AnimationTime + 0.5f);
+            transform.DOScale(scale, 0.3f).SetEase(Ease.OutQuart);
         }
 
         [EditorButton]
@@ -75,5 +78,26 @@ namespace Characters
                 OnHit?.Invoke(_data.Dmg);
             }
         }
+        
+
+        private void OnMouseEnter()
+        {
+            if (_canChoose)
+                PopUp(1.2f);
+        }
+
+        private void OnMouseExit()
+        {
+            if (_canChoose)
+                PopUp(1f);
+        }
+
+        private void OnMouseUp()
+        {
+            OnCharacterChosen?.Invoke(_character);
+            PopUp(1f);
+        }
+        
+        
     }
 }

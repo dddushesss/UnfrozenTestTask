@@ -10,7 +10,9 @@ namespace Map
         
         public Team Team => teamName;
         public Vector3 SpawnPos => rectTransform.position - new Vector3(0, rectTransform.rect.height/2, 0);
-        
+        public Vector2 Size => rectTransform.rect.size;
+
+        public bool IsInFront => isInFront;
 
         public void SetUp(Team teamName)
         {

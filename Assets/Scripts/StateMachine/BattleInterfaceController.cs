@@ -9,6 +9,7 @@ namespace StateMachine
     {
         private BattleInterfaceData _data;
         private BattleInterfaceControllerView _view;
+        
         public Action OnAttackButtonPressed;
         public Action OnSkipButtonPressed;
         public BattleInterfaceController(BattleInterfaceData data)

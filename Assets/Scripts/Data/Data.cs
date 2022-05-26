@@ -25,7 +25,7 @@ namespace Data
         {
             get
             {
-                if (_charactersData == null)
+                if (_battleInterfaceData == null)
                 {
                     _battleInterfaceData = Load<BattleInterfaceData>(battleInterfaceDataPath, isUsingNonDefaultBattleInterfaceData);
                 }
@@ -40,7 +40,7 @@ namespace Data
             {
                 if (_charactersData == null)
                 {
-                    _charactersData = Load<CharactersListData>(_charactersDataPath, isUsingNonDefaultBattleInterfaceData);
+                    _charactersData = Load<CharactersListData>(_charactersDataPath, isUsingNonDefaultCharacterListData);
                 }
         
                 return _charactersData;

@@ -28,7 +28,7 @@ namespace Characters
             {
                 var charData = _data.CharacterDataList[Random.Range(0, _data.CharacterDataList.Count)];
                 var character = new Character(charData);
-                character.Spawn(mapViewSpawnPos.SpawnPos, mapViewSpawnPos.Team);
+                character.Spawn(mapViewSpawnPos);
                 _characters.Add(character);
             }
         }
