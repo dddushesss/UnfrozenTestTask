@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Characters;
 using Singleton;
@@ -8,8 +9,8 @@ namespace StateMachine.States
     public class PlayerTurnState : State
     {
         private BattleController controller;
-
-        public PlayerTurnState(Character character, StateMachine stateMachine) : base(character, stateMachine)
+        
+        public PlayerTurnState(Character character, StateMachine stateMachine, List<Character> characters) : base(character, stateMachine, characters)
         {
             controller = (BattleController)stateMachine;
         }
@@ -24,6 +25,8 @@ namespace StateMachine.States
                 character.SwitchPlaces(controller.Player.First(c => c.IsInFront), null);
         }
 
+       
+
         private void ChoseCharacterToAttack()
         {
             controller.Enemies.ForEach(enemy =>
@@ -37,15 +40,14 @@ namespace StateMachine.States
         {
             controller.InterfaceControllers.OnAttackButtonPressed -= ChoseCharacterToAttack;
             controller.InterfaceControllers.OnSkipButtonPressed -= Skip;
-            stateMachine.ChangeState(
-                new EnemyTurnState(controller.Enemies[Random.Range(0, controller.Enemies.Count)],
-                    stateMachine));
+            controller.NextTurn();
             controller.Enemies.ForEach(enemy =>
             {
                 enemy.View.CanChoose(false);
                 enemy.View.OnCharacterChosen -= Attack;
             });
         }
+
         private void Attack(Character target)
         {
             controller.InterfaceControllers.OnAttackButtonPressed -= ChoseCharacterToAttack;
@@ -68,12 +70,7 @@ namespace StateMachine.States
         {
             character.Attack(target);
             Singleton<TimerHelper>.Instance.StartTimer(
-                () =>
-                {
-                    stateMachine.ChangeState(
-                        new EnemyTurnState(controller.Enemies[Random.Range(0, controller.Enemies.Count)],
-                            stateMachine));
-                }, 1f);
+                () => { controller.NextTurn(); }, 1f);
         }
     }
 }

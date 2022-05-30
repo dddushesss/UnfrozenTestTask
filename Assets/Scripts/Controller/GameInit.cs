@@ -17,15 +17,13 @@ namespace Controller
             CharacterFactory characterFactory = new CharacterFactory(mapView, data.CharactersData);
             characterFactory.Spawn();
 
-            BattleController battleController = new BattleController();
-            var battleInterface = new BattleInterfaceController(data.BattleInterfaceData);
-
-            battleController.SetInterface(battleInterface.Spawn());
-            battleController.SetLists(characterFactory.EnemyCharacters, characterFactory.PlayerCharacters);
             
-            battleController.Initialize(new PlayerTurnState(
-                characterFactory.PlayerCharacters[Random.Range(0, characterFactory.PlayerCharacters.Count)],
-                battleController));
+            var battleInterface = new BattleInterfaceController(data.BattleInterfaceData);
+            battleInterface.Spawn();
+            BattleController battleController = new BattleController(battleInterface, characterFactory.EnemyCharacters, characterFactory.PlayerCharacters);
+          
+            
+            battleController.Initialize();
         }
     }
 }

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Characters;
+using StateMachine.States;
+using UnityEngine;
 
 namespace StateMachine
 {
@@ -8,6 +10,9 @@ namespace StateMachine
         private BattleInterfaceController _interfaceControllers;
         private List<Character> _enemies;
         private List<Character> _player;
+        private PlayerTurnState _playerTurn;
+        private EnemyTurnState _enemyTurn;
+        private Queue<State> _stateQueue;
 
         public BattleInterfaceController InterfaceControllers => _interfaceControllers;
 
@@ -15,17 +20,34 @@ namespace StateMachine
 
         public List<Character> Player => _player;
 
-        public void SetInterface(BattleInterfaceController interfaceController)
+        public BattleController(BattleInterfaceController interfaceControllers, IEnumerable<Character> enemies,
+            IEnumerable<Character> player)
         {
-            _interfaceControllers = interfaceController;
-        }
+            _interfaceControllers = interfaceControllers;
 
-        public void SetLists(List<Character> enemies, List<Character> player)
-        {
             _enemies = new List<Character>();
             _player = new List<Character>();
             _enemies.AddRange(enemies);
             _player.AddRange(player);
+            _stateQueue = new Queue<State>(2);
+            _playerTurn = new PlayerTurnState(_player[Random.Range(0, _player.Count)], this, _player);
+            _enemyTurn = new EnemyTurnState(_enemies[Random.Range(0, _player.Count)], this, _enemies);
+        }
+
+
+        public void Initialize()
+        {
+            base.Initialize(_playerTurn);
+            _stateQueue.Enqueue(_enemyTurn);
+            _stateQueue.Enqueue(_playerTurn);
+        }
+
+        public void NextTurn()
+        {
+            var curTurn = _stateQueue.Dequeue();
+            _stateQueue.Enqueue(curTurn);
+            curTurn.SetNextCharacter();
+            ChangeState(curTurn);
         }
     }
 }

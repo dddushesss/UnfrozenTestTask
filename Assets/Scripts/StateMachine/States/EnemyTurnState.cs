@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Characters;
 using Singleton;
@@ -9,7 +10,7 @@ namespace StateMachine.States
     {
         private BattleController controller;
 
-        public EnemyTurnState(Character character, StateMachine stateMachine) : base(character, stateMachine)
+        public EnemyTurnState(Character character, StateMachine stateMachine, List<Character> characters) : base(character, stateMachine, characters)
         {
             controller = (BattleController)stateMachine;
         }
@@ -32,17 +33,11 @@ namespace StateMachine.States
                     {
                         character.Attack(target);
                     }
-                    
+
                     Singleton<TimerHelper>.Instance.StartTimer(
-                        () =>
-                        {
-                            stateMachine.ChangeState(
-                                new PlayerTurnState(controller.Player[Random.Range(0, controller.Enemies.Count)],
-                                    stateMachine));
-                        }, 1f);
+                        () => { controller.NextTurn(); }, 1f);
                 }, 0.3f);
             }, 0.3f);
         }
-        
     }
 }
