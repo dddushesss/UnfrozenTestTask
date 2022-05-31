@@ -13,12 +13,12 @@ namespace Characters
         private CharacterData _data;
         private int _hp;
         private Team _team;
-        private bool isInFront;
+        private Vector3 _defaultPosition;
 
         public bool IsPlayer => _team is Team.Player;
         public CharacterView View => _view;
 
-        public bool IsInFront => isInFront;
+        public Vector3 DefaultPosition => _defaultPosition;
 
         public Character(CharacterData data)
         {
@@ -29,7 +29,7 @@ namespace Characters
         {
             var data = _data.SkeletonData;
             data.GetSkeletonData(false);
-            isInFront = spawner.IsInFront;
+            _defaultPosition = spawner.SpawnPos;
             var go = SkeletonAnimation.NewSkeletonAnimationGameObject(data);
             _view = go.gameObject.GetOrAddComponent<CharacterView>();
             var colider = _view.gameObject.GetOrAddComponent<BoxCollider2D>();
@@ -59,17 +59,9 @@ namespace Characters
         {
             _view.PlayAnimation(_data.AttackAnimation);
             _view.OnHit += target.GetDamage;
-           
+            
         }
-
-        public void SwitchPlaces(Character target, Action onComplete)
-        {
-            isInFront = !isInFront;
-            var pos = target.View.transform.position;
-            target.View.transform.DOMove(_view.transform.position, 0.3f);
-            target.isInFront = !isInFront;
-            _view.transform.DOMove(pos, 0.3f).OnComplete(() => onComplete?.Invoke());
-        }
+        
         private void Death()
         {
             Debug.Log("Death");

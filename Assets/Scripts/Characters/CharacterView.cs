@@ -17,9 +17,14 @@ namespace Characters
         private Character _character;
         private MeshRenderer _renderer;
         private bool _canChoose = false;
+
+        public MeshRenderer Renderer => _renderer;
+
         public event Action<int> OnHit;
+        public event Action OnAnimationFinished;
         public event Action<Character> OnCharacterChosen;
-        
+
+
         public void SetUp(CharacterData data, bool isToFlip, Character character)
         {
             _skeleton = gameObject.GetOrAddComponent<SkeletonAnimation>();
@@ -27,25 +32,32 @@ namespace Characters
             if (_skeleton.state is null) return;
             if (isToFlip)
                 FlipX();
-            _data = data; 
+            _data = data;
             _skeleton.Initialize(true);
             _skeleton.Skeleton.SetSkin(_data.InitSkin);
             _renderer.sortingOrder = 3;
             _skeleton.AnimationState.SetAnimation(0, _data.InitAnimation, true);
             _skeleton.state.Event += Handle;
             _character = character;
+            
         }
 
         public void CanChoose(bool canChoose)
         {
             _canChoose = canChoose;
         }
-        
+
         public void PlayAnimation(string animation)
         {
-            _skeleton.AnimationState.SetAnimation(0, animation, false);
+            var anim = _skeleton.AnimationState.SetAnimation(0, animation, false);
+            anim.Complete += (track) =>
+            {
+                OnAnimationFinished?.Invoke();
+                OnAnimationFinished = null;
+            };
             _skeleton.state.AddAnimation(0, _data.InitAnimation, true, 0f);
         }
+
         private void FlipX()
         {
             _skeleton.initialFlipX = true;
@@ -79,7 +91,7 @@ namespace Characters
                 OnHit = null;
             }
         }
-        
+
 
         private void OnMouseEnter()
         {
@@ -98,7 +110,5 @@ namespace Characters
             OnCharacterChosen?.Invoke(_character);
             PopUp(1f);
         }
-        
-        
     }
 }

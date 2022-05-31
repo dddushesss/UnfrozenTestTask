@@ -20,7 +20,7 @@ namespace Controller
             
             var battleInterface = new BattleInterfaceController(data.BattleInterfaceData);
             battleInterface.Spawn();
-            BattleController battleController = new BattleController(battleInterface, characterFactory.EnemyCharacters, characterFactory.PlayerCharacters);
+            BattleController battleController = new BattleController(battleInterface, characterFactory.EnemyCharacters, characterFactory.PlayerCharacters, mapView.HitView);
           
             
             battleController.Initialize();

@@ -505,6 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackButton: {fileID: 1335108764628731742}
   skipButton: {fileID: 2734382586279316910}
+  _hitView: {fileID: 0}
 --- !u!1 &8391460869711814090
 GameObject:
   m_ObjectHideFlags: 0

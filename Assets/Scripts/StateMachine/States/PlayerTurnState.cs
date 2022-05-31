@@ -21,8 +21,7 @@ namespace StateMachine.States
             controller.InterfaceControllers.OnAttackButtonPressed += ChoseCharacterToAttack;
             controller.InterfaceControllers.OnSkipButtonPressed += Skip;
             controller.InterfaceControllers.SetButtonsEnabled(true);
-            if (!character.IsInFront)
-                character.SwitchPlaces(controller.Player.First(c => c.IsInFront), null);
+            
         }
 
        
@@ -57,20 +56,17 @@ namespace StateMachine.States
                 enemy.View.CanChoose(false);
                 enemy.View.OnCharacterChosen -= Attack;
             });
-            if (!target.IsInFront)
-            {
-                target.SwitchPlaces(controller.Enemies.First(c => c.IsInFront), () => { PerformAttack(target); });
-                return;
-            }
 
-            PerformAttack(target);
+            controller.OnCanHit += () => PerformAttack(target);
+            controller.ShowHit(character, target);
+            
         }
 
         private void PerformAttack(Character target)
         {
             character.Attack(target);
-            Singleton<TimerHelper>.Instance.StartTimer(
-                () => { controller.NextTurn(); }, 1f);
+           
+            character.View.OnAnimationFinished += () => controller.ReturnCharactersOnDefaultPosition(character, target);
         }
     }
 }

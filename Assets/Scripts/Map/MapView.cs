@@ -8,9 +8,11 @@ namespace Map
         [SerializeField] private List<SpawnerView> spawners;
         [SerializeField] private GameObject spawnerPrefab;
         [SerializeField] private Transform parrant;
+        [SerializeField] private HitView _hitView;
 
         public List<SpawnerView> Spawners => spawners;
-        
+
+        public HitView HitView => _hitView;
 
 #if UNITY_EDITOR
 
